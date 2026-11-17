@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<title>খতিয়ান — Ledger</title>
+<title>মেসার্স নবী এন্টারপ্রাইজ — Admin Panel</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700&family=Fraunces:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&display=swap">
 <style>
@@ -173,15 +173,15 @@ tfoot td.num{text-align:right; font-variant-numeric:tabular-nums;}
   #printSheet .ps-contact .row{display:flex; justify-content:flex-end; gap:4px;}
   #printSheet .ps-contact .lbl{min-width:34px; text-align:left;}
 
-  /* ---- the "খতিয়ান / LEDGER / serial" mark, upper right ---- */
-  #printSheet .ps-mark{position:absolute; top:34px; right:0; text-align:right;}
-  #printSheet .ps-mark .bn{display:block; font-weight:700; font-size:18px;}
-  #printSheet .ps-mark .en{
-    display:block; font-family:Arial, 'ArialRoundedMTBold', sans-serif; font-weight:700;
-    font-size:11px; letter-spacing:.5px; margin-top:-2px;
-  }
+  /* ---- the "খতিয়ান / LEDGER / serial" mark, upper right, single line ---- */
+  #printSheet .ps-mark{position:absolute; top:28px; right:0; text-align:right; display:flex; flex-direction:column; align-items:flex-end; gap:1px; white-space:nowrap;}
   #printSheet .ps-mark .serial{
-    position:absolute; top:-10px; right:-2px; font-family:Arial, sans-serif; font-size:11px; font-weight:700;
+    font-family:Arial, sans-serif; font-size:10px; font-weight:700; color:#333;
+  }
+  #printSheet .ps-mark .bn{font-weight:700; font-size:18px;}
+  #printSheet .ps-mark .en{
+    font-family:Arial, 'ArialRoundedMTBold', sans-serif; font-weight:700;
+    font-size:11px; letter-spacing:.5px;
   }
 
   /* ---- meta fields: পার্টির নাম / ঠিকানা / মোবাইল + অর্থ বছর ---- */
@@ -263,6 +263,9 @@ tfoot td.num{text-align:right; font-variant-numeric:tabular-nums;}
 <div class="app" id="appRoot">
   <div class="wrap-app">
     <div class="topbar">
+      <div class="brandline">
+        <div class="en">Admin Panel</div>
+      </div>
       <div class="btns no-print">
         <button class="b sm" id="newBtn">+ New ledger</button>
         <button class="b sm" id="saveBtn">Save</button>
@@ -274,8 +277,8 @@ tfoot td.num{text-align:right; font-variant-numeric:tabular-nums;}
 
     <div class="shell">
       <nav class="sidenav no-print">
-        <button class="tab active" id="tabLedgerBtn"><span class="bn">খতিয়ান</span>Ledger</button>
-        <button class="tab" id="tabSavedBtn"><span class="bn">সংরক্ষিত</span>Saved ledgers</button>
+        <button class="tab active" id="tabLedgerBtn"><span class="bn">খতিয়ান তৈরি</span>/NEW LEDGER</button>
+        <button class="tab" id="tabSavedBtn"><span class="bn">সংরক্ষিত খতিয়ান</span>/SAVED LEDGERS</button>
       </nav>
 
       <div class="content">
@@ -345,9 +348,9 @@ tfoot td.num{text-align:right; font-variant-numeric:tabular-nums;}
     <div class="ps-company" id="ps_company">মেসার্স নবী এন্টারপ্রাইজ</div>
     <div class="ps-addr" id="ps_companyaddr">হাইস্পীড ঘাট, নওয়াপাড়া, যশোর</div>
     <div class="ps-mark">
+      <span class="serial" id="ps_serial"></span>
       <span class="bn">খতিয়ান</span>
       <span class="en">LEDGER</span>
-      <span class="serial" id="ps_serial"></span>
     </div>
   </div>
 
