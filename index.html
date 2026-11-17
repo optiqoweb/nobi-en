@@ -43,6 +43,8 @@ input,select,button{font-family:inherit;}
 .topstrip{background:var(--brand-dk); color:#e7efe9; font-size:.82rem;}
 .topstrip .wrap{display:flex; align-items:center; justify-content:space-between; min-height:40px; gap:12px; max-width:1240px; margin:0 auto; padding:0 20px;}
 .topstrip .bn{font-size:.95rem;}
+.langtoggle{border:1px solid rgba(231,239,233,.4); background:rgba(255,255,255,.08); color:#e7efe9; font:600 .74rem Inter,sans-serif; letter-spacing:.04em; padding:4px 11px; border-radius:999px; cursor:pointer;}
+.langtoggle:hover{background:rgba(255,255,255,.16);}
 
 /* ---------- login ---------- */
 .lg{min-height:calc(100svh - 40px); display:grid; place-items:center; padding:24px 16px;}
@@ -232,31 +234,32 @@ tfoot td.num{text-align:right; font-variant-numeric:tabular-nums;}
 
 <div class="topstrip no-print"><div class="wrap">
   <span class="bn">খতিয়ান · লেজার প্যানেল</span>
+  <button type="button" class="langtoggle" id="langToggle">EN</button>
 </div></div>
 
 <!-- ================= LOGIN ================= -->
 <div class="lg" id="login">
   <form class="lgc" id="lgf" autocomplete="on">
-    <h1>Admin Panel</h1>
+    <h1 data-en="Admin Panel" data-bn="অ্যাডমিন প্যানেল">Admin Panel</h1>
     <div class="biz bn">মেসার্স নবী এন্টারপ্রাইজ</div>
-    <div class="sub">Please sign in to open the books</div>
+    <div class="sub" data-en="Please sign in to open the books" data-bn="হিসাব দেখতে সাইন ইন করুন">Please sign in to open the books</div>
 
-    <label for="lu">Username</label>
+    <label for="lu" data-en="Username" data-bn="ইউজারনেম">Username</label>
     <input id="lu" autocomplete="username" autocapitalize="off" spellcheck="false">
 
-    <label for="lp">Password</label>
+    <label for="lp" data-en="Password" data-bn="পাসওয়ার্ড">Password</label>
     <div class="pw">
       <input id="lp" type="password" autocomplete="current-password">
-      <button type="button" id="lshow">Show</button>
+      <button type="button" id="lshow" data-en="Show" data-bn="দেখান">Show</button>
     </div>
 
-    <label class="ck"><input type="checkbox" id="lrem"><span>Keep me signed in on this device (30 days)</span></label>
+    <label class="ck"><input type="checkbox" id="lrem"><span data-en="Keep me signed in on this device (30 days)" data-bn="এই ডিভাইসে সাইন ইন রাখুন (৩০ দিন)">Keep me signed in on this device (30 days)</span></label>
 
     <div class="lerr" id="lerr" role="alert"></div>
-    <button class="b" type="submit">Sign in</button>
+    <button class="b" type="submit" data-en="Sign in" data-bn="সাইন ইন">Sign in</button>
     <p class="lgn"></p>
   </form>
-  <div class="creditwrap"><span class="credit">Designed &amp; Maintained by <a class="ob" href="https://optiqoweb.github.io/optiqoweb/" target="_blank" rel="noopener">Optiqo Web</a></span></div>
+  <div class="creditwrap"><span class="credit"><span data-en="Designed &amp; Maintained by" data-bn="ডিজাইন ও রক্ষণাবেক্ষণ">Designed &amp; Maintained by</span> <a class="ob" href="https://optiqoweb.github.io/optiqoweb/" target="_blank" rel="noopener">Optiqo Web</a></span></div>
 </div>
 
 <!-- ================= APP ================= -->
@@ -264,14 +267,14 @@ tfoot td.num{text-align:right; font-variant-numeric:tabular-nums;}
   <div class="wrap-app">
     <div class="topbar">
       <div class="brandline">
-        <div class="en">Admin Panel</div>
+        <div class="en" data-en="Admin Panel" data-bn="অ্যাডমিন প্যানেল">Admin Panel</div>
       </div>
       <div class="btns no-print">
-        <button class="b sm" id="newBtn">+ New ledger</button>
-        <button class="b sm" id="saveBtn">Save</button>
+        <button class="b sm" id="newBtn" data-en="+ New ledger" data-bn="+ নতুন খতিয়ান">+ New ledger</button>
+        <button class="b sm" id="saveBtn" data-en="Save" data-bn="সংরক্ষণ করুন">Save</button>
         <span class="savemsg" id="saveMsg" aria-live="polite"></span>
-        <button class="b g sm" id="printBtn">Print / Save PDF</button>
-        <button class="b r sm" id="logoutBtn">Sign out</button>
+        <button class="b g sm" id="printBtn" data-en="Print / Save PDF" data-bn="প্রিন্ট / পিডিএফ সেভ">Print / Save PDF</button>
+        <button class="b r sm" id="logoutBtn" data-en="Sign out" data-bn="সাইন আউট">Sign out</button>
       </div>
     </div>
 
@@ -284,17 +287,17 @@ tfoot td.num{text-align:right; font-variant-numeric:tabular-nums;}
       <div class="content">
         <div class="view active" id="viewLedger">
           <section class="panel">
-            <h2>Account details</h2>
+            <h2 data-en="Account details" data-bn="হিসাবের বিবরণ">Account details</h2>
             <div class="meta-grid">
-              <div class="field"><span class="lbl bn">পার্টির নাম</span><input id="f_party" placeholder="Name of the account holder"></div>
-              <div class="field"><span class="lbl bn">মোবাইল</span><input id="f_mobile" placeholder="Phone number"></div>
-              <div class="field"><span class="lbl bn">ঠিকানা</span><input id="f_address" placeholder="Address"></div>
+              <div class="field"><span class="lbl bn">পার্টির নাম</span><input id="f_party" placeholder="Name of the account holder" data-ph-en="Name of the account holder" data-ph-bn="হিসাবধারীর নাম"></div>
+              <div class="field"><span class="lbl bn">মোবাইল</span><input id="f_mobile" placeholder="Phone number" data-ph-en="Phone number" data-ph-bn="মোবাইল নম্বর"></div>
+              <div class="field"><span class="lbl bn">ঠিকানা</span><input id="f_address" placeholder="Address" data-ph-en="Address" data-ph-bn="ঠিকানা"></div>
               <div class="field"><span class="lbl bn">অর্থ বছর</span><input id="f_year" placeholder="e.g. ২০২৬–২০২৭"></div>
             </div>
           </section>
 
           <section class="panel">
-            <h2>বিবরণ — Account entries</h2>
+            <h2><span class="bn">বিবরণ</span> — <span data-en="Account entries" data-bn="হিসাবের এন্ট্রি">Account entries</span></h2>
             <div class="tablewrap">
               <table>
                 <thead>
@@ -311,7 +314,7 @@ tfoot td.num{text-align:right; font-variant-numeric:tabular-nums;}
                 <tbody id="rows"></tbody>
                 <tfoot>
                   <tr>
-                    <td colspan="3" style="text-align:right;">Totals</td>
+                    <td colspan="3" style="text-align:right;" data-en="Totals" data-bn="মোট">Totals</td>
                     <td class="num" id="totDebit">0.00</td>
                     <td class="num" id="totCredit">0.00</td>
                     <td class="num" id="runBal">0.00</td>
@@ -321,8 +324,8 @@ tfoot td.num{text-align:right; font-variant-numeric:tabular-nums;}
               </table>
             </div>
             <div class="addrow no-print">
-              <button class="b g sm" id="addRow">+ Add entry</button>
-              <span class="note">Balance recalculates top to bottom as you type.</span>
+              <button class="b g sm" id="addRow" data-en="+ Add entry" data-bn="+ এন্ট্রি যোগ করুন">+ Add entry</button>
+              <span class="note" data-en="Balance recalculates top to bottom as you type." data-bn="টাইপ করার সাথে সাথে অবশিষ্ট উপর থেকে নিচ পর্যন্ত নতুন করে হিসাব হবে।">Balance recalculates top to bottom as you type.</span>
             </div>
           </section>
 
@@ -330,10 +333,10 @@ tfoot td.num{text-align:right; font-variant-numeric:tabular-nums;}
 
         <div class="view" id="viewSaved">
           <section class="panel">
-            <h2><span class="bn">সংরক্ষিত খতিয়ান</span> — Saved ledgers</h2>
+            <h2><span class="bn">সংরক্ষিত খতিয়ান</span> — <span data-en="Saved ledgers" data-bn="সংরক্ষিত তালিকা">Saved ledgers</span></h2>
             <div class="savedlist" id="savedList"></div>
           </section>
-          <p class="note no-print">This is saved to the browser for now. <span id="dbNote">When a database is connected, this list will be loaded from and written to it instead.</span></p>
+          <p class="note no-print"><span data-en="This is saved to the browser for now." data-bn="এটি আপাতত ব্রাউজারে সংরক্ষিত হচ্ছে।">This is saved to the browser for now.</span> <span id="dbNote" data-en="When a database is connected, this list will be loaded from and written to it instead." data-bn="ডেটাবেস সংযুক্ত হলে এই তালিকা সেখান থেকে লোড ও সংরক্ষণ হবে।">When a database is connected, this list will be loaded from and written to it instead.</span></p>
         </div>
       </div>
     </div>
@@ -395,7 +398,7 @@ tfoot td.num{text-align:right; font-variant-numeric:tabular-nums;}
     <tbody id="ps_rows"></tbody>
     <tfoot>
       <tr>
-        <td colspan="3" style="text-align:right;">Totals</td>
+        <td colspan="3" style="text-align:right;" data-en="Totals" data-bn="মোট">Totals</td>
         <td class="ps-num" id="ps_totDebit">0.00</td>
         <td class="ps-num" id="ps_totCredit">0.00</td>
         <td class="ps-num" id="ps_runBal">0.00</td>
@@ -409,6 +412,53 @@ tfoot td.num{text-align:right; font-variant-numeric:tabular-nums;}
 "use strict";
 var $=function(i){return document.getElementById(i);};
 var ok=function(fn,fb){try{return fn();}catch(e){return fb;}};
+
+/* ---------- i18n (EN / বাং toggle) ---------- */
+var I18N = {
+  en: {
+    saving:"Saving…", saved:"Saved ✓", openBtn:"Open", delBtn:"Delete",
+    emptyList:'No saved ledgers yet. Open a ledger and press <b>Save</b> to add one here.',
+    serialLbl:"Serial", savedLbl:"saved", debitLbl:"Debit", creditLbl:"Credit", balanceLbl:"Balance",
+    confirmNew:"Start a new ledger? Unsaved changes to the current one will be lost unless you Save first.",
+    confirmDel:"Delete this saved ledger? This can't be undone.",
+    tooManyAttempts:function(s){return "Too many attempts. Try again in "+s+"s.";},
+    enterCreds:"Enter your username and password.", checking:"Checking…",
+    lockedOut:"Too many attempts. Locked for 60 seconds.", wrongCreds:"Wrong username or password.",
+    removeRow:"Remove row", descPh:"Description", show:"Show", hide:"Hide", noPartyName:"(no party name)"
+  },
+  bn: {
+    saving:"সংরক্ষণ হচ্ছে…", saved:"সংরক্ষিত হয়েছে ✓", openBtn:"খুলুন", delBtn:"মুছুন",
+    emptyList:'এখনো কোনো খতিয়ান সংরক্ষিত নেই। একটি খতিয়ান খুলে <b>Save</b> চাপুন।',
+    serialLbl:"সিরিয়াল", savedLbl:"সংরক্ষণের সময়", debitLbl:"খরচ", creditLbl:"জমা", balanceLbl:"অবশিষ্ট",
+    confirmNew:"নতুন খতিয়ান শুরু করবেন? আগে Save না করলে বর্তমান পরিবর্তনগুলো হারিয়ে যাবে।",
+    confirmDel:"এই সংরক্ষিত খতিয়ানটি মুছে ফেলবেন? এটি আর ফিরিয়ে আনা যাবে না।",
+    tooManyAttempts:function(s){return "অনেকবার চেষ্টা হয়েছে। "+s+" সেকেন্ড পর আবার চেষ্টা করুন।";},
+    enterCreds:"ইউজারনেম এবং পাসওয়ার্ড লিখুন।", checking:"যাচাই হচ্ছে…",
+    lockedOut:"অনেকবার ভুল চেষ্টা হয়েছে। ৬০ সেকেন্ডের জন্য লক করা হয়েছে।", wrongCreds:"ইউজারনেম বা পাসওয়ার্ড ভুল।",
+    removeRow:"সারি মুছুন", descPh:"বিবরণ", show:"দেখান", hide:"লুকান", noPartyName:"(পার্টির নাম নেই)"
+  }
+};
+var LANG = ok(function(){return localStorage.getItem("ledgerapp:lang");},null) || "bn";
+function T(key){ return I18N[LANG][key]; }
+function applyStaticLang(){
+  document.documentElement.setAttribute("data-lang", LANG);
+  Array.prototype.forEach.call(document.querySelectorAll("[data-en]"), function(el){
+    el.textContent = el.getAttribute("data-"+LANG);
+  });
+  Array.prototype.forEach.call(document.querySelectorAll("[data-ph-en]"), function(el){
+    el.placeholder = el.getAttribute("data-ph-"+LANG);
+  });
+  var langBtn = $("langToggle");
+  if(langBtn) langBtn.textContent = LANG==="en" ? "বাং" : "EN";
+  var lshowBtn = $("lshow");
+  if(lshowBtn) lshowBtn.textContent = (lp && lp.type==="password") ? T("show") : T("hide");
+}
+function setLang(lang){
+  LANG = lang;
+  ok(function(){localStorage.setItem("ledgerapp:lang", lang);});
+  applyStaticLang();
+  if(typeof renderSavedList === "function" && viewSaved && viewSaved.classList.contains("active")) renderSavedList();
+}
 
 /* ---------- SHA-256 (WebCrypto) ---------- */
 function sha256(text){
@@ -439,16 +489,17 @@ function lockUntil(){ return +sessionStorage.getItem("lg_lock")||0; }
 
 var lu=$("lu"), lp=$("lp"), lerr=$("lerr"), lgf=$("lgf"), lrem=$("lrem");
 $("lshow").addEventListener("click",function(){
-  var isPw=lp.type==="password"; lp.type=isPw?"text":"password"; this.textContent=isPw?"Hide":"Show";
+  var isPw=lp.type==="password"; lp.type=isPw?"text":"password"; this.textContent=isPw?T("hide"):T("show");
 });
+$("langToggle").addEventListener("click", function(){ setLang(LANG==="en" ? "bn" : "en"); });
 
 lgf.addEventListener("submit", function(e){
   e.preventDefault();
   var now=Date.now(), lock=lockUntil();
-  if(now<lock){ lerr.textContent="Too many attempts. Try again in "+Math.ceil((lock-now)/1000)+"s."; return; }
+  if(now<lock){ lerr.textContent=T("tooManyAttempts")(Math.ceil((lock-now)/1000)); return; }
   var username=lu.value.trim(), pass=lp.value;
-  if(!username||!pass){ lerr.textContent="Enter your username and password."; return; }
-  lerr.textContent="Checking…";
+  if(!username||!pass){ lerr.textContent=T("enterCreds"); return; }
+  lerr.textContent=T("checking");
   ensurePreset().then(function(){
     var users=loadUsers(), rec=users[username.toLowerCase()];
     if(!rec){ return Promise.resolve(false); }
@@ -461,8 +512,8 @@ lgf.addEventListener("submit", function(e){
       lerr.textContent=""; enterApp(result);
     } else {
       var f=fails()+1;
-      if(f>=5){ sessionStorage.setItem("lg_lock", String(Date.now()+60000)); sessionStorage.setItem("lg_fail","0"); lerr.textContent="Too many attempts. Locked for 60 seconds."; }
-      else { sessionStorage.setItem("lg_fail", String(f)); lerr.textContent="Wrong username or password."; }
+      if(f>=5){ sessionStorage.setItem("lg_lock", String(Date.now()+60000)); sessionStorage.setItem("lg_fail","0"); lerr.textContent=T("lockedOut"); }
+      else { sessionStorage.setItem("lg_fail", String(f)); lerr.textContent=T("wrongCreds"); }
       lp.value=""; lp.focus();
     }
   });
@@ -567,12 +618,12 @@ function addRowEl(data){
   var tr=document.createElement("tr");
   tr.innerHTML =
     '<td><input type="date" class="c-date" value="'+escapeAttr(data.date)+'"></td>'+
-    '<td><input type="text" class="c-part" placeholder="Description" value="'+escapeAttr(data.particular)+'"></td>'+
+    '<td><input type="text" class="c-part" placeholder="'+T("descPh")+'" value="'+escapeAttr(data.particular)+'"></td>'+
     '<td><input type="text" class="c-folio" value="'+escapeAttr(data.folio)+'"></td>'+
     '<td class="num"><input type="text" inputmode="decimal" class="c-debit" value="'+escapeAttr(data.debit)+'"></td>'+
     '<td class="num"><input type="text" inputmode="decimal" class="c-credit" value="'+escapeAttr(data.credit)+'"></td>'+
     '<td class="num"><span class="c-bal">0.00</span></td>'+
-    '<td class="del no-print"><button type="button" title="Remove row">✕</button></td>';
+    '<td class="del no-print"><button type="button" title="'+T("removeRow")+'">✕</button></td>';
   Array.prototype.forEach.call(tr.querySelectorAll("input"), function(inp){
     inp.addEventListener("input", function(){ recalc(); persist(); });
   });
@@ -632,7 +683,7 @@ function totalsOf(state){
 
 $("saveBtn").addEventListener("click", function(){
   clearTimeout(saveMsgTimer);
-  saveMsgEl.textContent = "Saving…";
+  saveMsgEl.textContent = T("saving");
   saveMsgEl.className = "savemsg pending";
   persist(); // keep the working draft current
 
@@ -654,14 +705,14 @@ $("saveBtn").addEventListener("click", function(){
   saveSavedList(currentUser, list);
 
   setTimeout(function(){
-    saveMsgEl.textContent = "Saved ✓";
+    saveMsgEl.textContent = T("saved");
     saveMsgEl.className = "savemsg";
     saveMsgTimer = setTimeout(function(){ saveMsgEl.textContent = ""; }, 2500);
   }, 250);
 });
 
 $("newBtn").addEventListener("click", function(){
-  if(!confirm("Start a new ledger? Unsaved changes to the current one will be lost unless you Save first.")) return;
+  if(!confirm(T("confirmNew"))) return;
   fields.forEach(function(el){ el.value=""; });
   rowsEl.innerHTML="";
   currentSerial = randomSerial();
@@ -683,7 +734,7 @@ function renderSavedList(){
   var wrap = $("savedList");
   wrap.innerHTML = "";
   if(!list.length){
-    wrap.innerHTML = '<div class="empty">No saved ledgers yet. Open a ledger and press <b>Save</b> to add one here.</div>';
+    wrap.innerHTML = '<div class="empty">'+T("emptyList")+'</div>';
     return;
   }
   list.forEach(function(s){
@@ -691,17 +742,17 @@ function renderSavedList(){
     card.className = "savedcard";
     card.innerHTML =
       '<div class="sc-main">'+
-        '<div class="sc-party bn">'+escapeHtml(s.party || "(no party name)")+'</div>'+
-        '<div class="sc-sub">Serial '+escapeHtml(s.serial||"")+' · saved '+escapeHtml(fmtSavedAt(s.savedAt))+'</div>'+
+        '<div class="sc-party bn">'+escapeHtml(s.party || T("noPartyName"))+'</div>'+
+        '<div class="sc-sub">'+T("serialLbl")+' '+escapeHtml(s.serial||"")+' · '+T("savedLbl")+' '+escapeHtml(fmtSavedAt(s.savedAt))+'</div>'+
       '</div>'+
       '<div class="sc-figs">'+
-        '<div><b>Debit</b>'+(s.totals?s.totals.debit.toFixed(2):"0.00")+'</div>'+
-        '<div><b>Credit</b>'+(s.totals?s.totals.credit.toFixed(2):"0.00")+'</div>'+
-        '<div><b>Balance</b>'+(s.totals?s.totals.balance.toFixed(2):"0.00")+'</div>'+
+        '<div><b>'+T("debitLbl")+'</b>'+(s.totals?s.totals.debit.toFixed(2):"0.00")+'</div>'+
+        '<div><b>'+T("creditLbl")+'</b>'+(s.totals?s.totals.credit.toFixed(2):"0.00")+'</div>'+
+        '<div><b>'+T("balanceLbl")+'</b>'+(s.totals?s.totals.balance.toFixed(2):"0.00")+'</div>'+
       '</div>'+
       '<div class="sc-actions">'+
-        '<button class="b g sm" data-act="open">Open</button>'+
-        '<button class="b r sm" data-act="del">Delete</button>'+
+        '<button class="b g sm" data-act="open">'+T("openBtn")+'</button>'+
+        '<button class="b r sm" data-act="del">'+T("delBtn")+'</button>'+
       '</div>';
     card.querySelector('[data-act="open"]').addEventListener("click", function(){ openSaved(s.id); });
     card.querySelector('[data-act="del"]').addEventListener("click", function(){ deleteSaved(s.id); });
@@ -727,7 +778,7 @@ function openSaved(id){
 }
 
 function deleteSaved(id){
-  if(!confirm("Delete this saved ledger? This can't be undone.")) return;
+  if(!confirm(T("confirmDel"))) return;
   var list = loadSavedList(currentUser).filter(function(x){ return x.id !== id; });
   saveSavedList(currentUser, list);
   renderSavedList();
@@ -752,6 +803,7 @@ function enterApp(username){
 }
 
 /* ---------- resume session ---------- */
+applyStaticLang();
 ensurePreset().then(function(){
   var saved = sessionStorage.getItem(sessionKey) || localStorage.getItem(sessionKey);
   if(saved){
