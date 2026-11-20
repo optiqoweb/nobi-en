@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>মেসার্স নবী এন্টারপ্রাইজ — Admin Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700&family=Fraunces:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --bg:#f3f5f1; --surface:#ffffff; --glass:rgba(255,255,255,.82);
+  --ink:#1c2320; --muted:#5c6660; --line:#d8ddd4;
+  --brand:#1f5f4a; --brand-dk:#153f32; --soft:#e7efe9;
+  --accent:#9c5a33; --dng:#9c3b2e; --dngbg:#fbeae6;
+  color-scheme: light;
+}
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font:15px/1.5 Inter, "Noto Serif Bengali", system-ui, sans-serif;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);}
+.bn{font-family:'Noto Serif Bengali', serif;}
+h1,h2,h3{margin:0;}
+input,select,button{font-family:inherit;}
+
+/* ---------- ambient background ---------- */
+.bgfx{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;}
+.bgfx i{position:absolute;border-radius:50%;filter:blur(80px);opacity:.28;will-change:transform;}
+.bgfx i:nth-child(1){width:460px;height:460px;left:-140px;top:4%;background:#1f5f4a;animation:bgA 30s ease-in-out infinite alternate;}
+.bgfx i:nth-child(2){width:520px;height:520px;right:-160px;top:30%;background:#9c5a33;animation:bgB 36s ease-in-out infinite alternate;}
+.bgfx i:nth-child(3){width:420px;height:420px;left:34%;bottom:-180px;background:#3c7d64;animation:bgC 33s ease-in-out infinite alternate;}
+@keyframes bgA{to{transform:translate(200px,140px) scale(1.18);}}
+@keyframes bgB{to{transform:translate(-220px,-120px) scale(.86);}}
+@keyframes bgC{to{transform:translate(-190px,-80px) scale(1.22);}}
+@media (prefers-reduced-motion:reduce){.bgfx i{animation:none;}}
+@media (max-width:760px){.bgfx i{filter:blur(54px);}}
+
+/* ---------- top strip ---------- */
+.topstrip{background:var(--brand-dk); color:#e7efe9; font-size:.82rem;}
+.topstrip .wrap{display:flex; align-items:center; justify-content:space-between; min-height:40px; gap:12px; max-width:1240px; margin:0 auto; padding:0 20px;}
+.topstrip .bn{font-size:.95rem;}
+.langtoggle{border:1px solid rgba(231,239,233,.4); background:rgba(255,255,255,.08); color:#e7efe9; font:600 .74rem Inter,sans-serif; letter-spacing:.04em; padding:4px 11px; border-radius:999px; cursor:pointer;}
+.langtoggle:hover{background:rgba(255,255,255,.16);}
+
+/* ---------- login ---------- */
+.lg{min-height:calc(100svh - 40px); display:grid; place-items:center; padding:24px 16px;}
+body.in .lg{display:none;}
+body:not(.in) .app{display:none;}
+.lgc{width:100%; max-width:400px; background:var(--glass); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--line); border-radius:18px; padding:30px 28px; box-shadow:0 16px 48px rgba(21,63,50,.14);}
+.lgc .mark{text-align:center; font-family:'Noto Serif Bengali',serif; font-weight:700; font-size:1.3rem; color:var(--brand);}
+.lgc h1{text-align:center; font-family:Fraunces,'Noto Serif Bengali',serif; font-size:1.05rem; color:var(--brand-dk); margin-top:4px; font-weight:600;}
+.lgc .biz{text-align:center; font-size:1.3rem; font-weight:700; color:var(--accent); margin-top:6px;}
+.lgc .sub{text-align:center; color:var(--muted); font-size:.83rem; margin:3px 0 20px;}
+.lgc label{display:block; font-size:.78rem; color:var(--muted); font-weight:500; margin:14px 0 5px;}
+.lgc input{width:100%; border:1px solid var(--line); border-radius:10px; padding:10px 12px; background:var(--surface); color:var(--ink); outline:none;}
+.lgc input:focus{border-color:var(--brand); outline:2px solid color-mix(in srgb, var(--brand) 25%, transparent);}
+.pw{position:relative;}
+.pw button{position:absolute; right:6px; top:6px; border:0; background:none; color:var(--brand); font-weight:600; cursor:pointer; padding:6px 8px; font-size:.78rem;}
+.ck{display:flex; gap:8px; align-items:flex-start; font-size:.83rem; color:var(--ink); margin-top:14px;}
+.ck input{width:auto; margin-top:3px;}
+.b{border:0; border-radius:999px; padding:10px 18px; font:600 .9rem Inter,sans-serif; cursor:pointer; background:var(--brand); color:#fff; box-shadow:0 8px 18px rgba(31,95,74,.25);}
+.b:hover{filter:brightness(.95);}
+.b:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+.lgc .b{width:100%; margin-top:18px; padding:11px;}
+.lerr{min-height:1.2em; font-size:.83rem; font-weight:600; color:var(--dng); text-align:center; margin:12px 0 0;}
+.lgn{font-size:.74rem; color:var(--muted); text-align:center; margin:14px 0 0;}
+.credit{display:inline-flex; align-items:center; gap:4px; background:var(--surface); color:var(--ink); padding:9px 18px; border-radius:999px; font-size:.82rem; box-shadow:0 4px 14px rgba(21,63,50,.12); border:1px solid var(--line);}
+.credit .ob{color:var(--brand-dk); font-weight:700; text-decoration:underline; text-underline-offset:3px;}
+.credit .ob::after{content:" \2197"; text-decoration:none; display:inline-block;}
+.credit .ob:hover{color:var(--accent);}
+.creditwrap{display:flex; justify-content:center; margin-top:18px;}
+.creditwrap.footer{margin:30px 0 10px;}
+
+/* ---------- app shell ---------- */
+.wrap-app{max-width:1200px; margin:0 auto; padding:22px 20px 60px;}
+.topbar{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:20px;}
+.brandline .bn{font-size:1.5rem; color:var(--brand); font-weight:700;}
+.brandline .en{font-size:.74rem; letter-spacing:.12em; color:var(--muted); text-transform:uppercase;}
+.btns{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; flex:1;}
+.b.g{background:var(--soft); color:var(--brand-dk); box-shadow:none;}
+.b.r{background:var(--dngbg); color:var(--dng); box-shadow:none;}
+.b.sm{padding:8px 14px; font-size:.84rem;}
+.savemsg{font-size:.82rem; color:var(--brand); font-weight:600; align-self:center;}
+.savemsg:empty{display:none;}
+.savemsg.pending{color:var(--muted); font-weight:500;}
+
+.panel{background:var(--glass); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); border:1px solid var(--line); border-radius:18px; box-shadow:0 1px 2px rgba(21,63,50,.04), 0 10px 28px rgba(21,63,50,.05); padding:22px 24px; margin-bottom:20px;}
+.panel h2{font-family:Fraunces,'Noto Serif Bengali',serif; font-size:1rem; color:var(--brand-dk); margin-bottom:14px; font-weight:600;}
+.meta-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px 24px;}
+@media (max-width:620px){.meta-grid{grid-template-columns:1fr;}}
+.field{border-bottom:1px solid var(--line); padding:7px 0 6px; display:flex; gap:10px; align-items:baseline;}
+.field .lbl{font-size:.78rem; color:var(--muted); min-width:96px; flex-shrink:0;}
+.field input{border:none; background:transparent; font-size:.95rem; color:var(--ink); width:100%; outline:none;}
+
+.tablewrap{overflow-x:auto; border:1px solid var(--line); border-radius:12px;}
+table{width:100%; border-collapse:collapse; min-width:720px;}
+thead th{background:var(--soft); border-bottom:1px solid var(--line); padding:11px 9px; font-weight:600; font-size:.83rem; text-align:left; white-space:nowrap; color:var(--brand-dk);}
+thead th .bn{display:block; font-size:.96rem;}
+thead th .en{display:block; font-size:.66rem; color:var(--muted); font-weight:500; letter-spacing:.06em; text-transform:uppercase;}
+tbody td{border-bottom:1px solid var(--line); padding:0;}
+tbody td input{width:100%; border:none; background:transparent; color:var(--ink); padding:9px 9px; font-size:.92rem; outline:none; border-radius:6px;}
+tbody td input:focus{background:var(--soft);}
+tbody tr:hover{background:color-mix(in srgb, var(--soft) 55%, transparent);}
+td.num input{text-align:right; font-variant-numeric:tabular-nums;}
+td.del{width:38px; text-align:center;}
+td.del button{border:0; background:none; color:var(--muted); font-size:1rem; padding:6px; cursor:pointer; border-radius:6px;}
+td.del button:hover{color:var(--dng); background:var(--dngbg);}
+tfoot td{border-top:2px solid var(--line); padding:11px 9px; font-weight:700; background:var(--soft);}
+tfoot td.num{text-align:right; font-variant-numeric:tabular-nums;}
+
+.addrow{margin-top:14px; display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between;}
+.note{font-size:.78rem; color:var(--muted); line-height:1.6;}
+
+/* ---------- left sidebar nav + content shell ---------- */
+.shell{display:flex; align-items:flex-start; gap:22px;}
+.sidenav{width:190px; flex-shrink:0; display:flex; flex-direction:column; gap:3px; position:sticky; top:16px;}
+.tab{display:flex; align-items:center; gap:8px; border:0; background:none; width:100%; text-align:left;
+  padding:10px 14px; font:600 .88rem Inter,sans-serif; color:var(--muted); cursor:pointer; border-radius:10px;}
+.tab:hover{background:var(--soft);}
+.tab.active{color:var(--brand-dk); background:var(--soft);}
+.tab .bn{font-size:.95rem;}
+.content{flex:1; min-width:0;}
+.view{display:none;}
+.view.active{display:block;}
+@media (max-width:760px){
+  .shell{flex-direction:column;}
+  .sidenav{width:100%; flex-direction:row; position:static; border-bottom:1px solid var(--line); padding-bottom:8px; margin-bottom:4px;}
+}
+
+/* ---------- saved ledgers list ---------- */
+.savedlist{display:flex; flex-direction:column; gap:10px;}
+.savedcard{border:1px solid var(--line); border-radius:14px; padding:14px 16px; background:var(--surface); display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;}
+.savedcard .sc-main{flex:1; min-width:200px;}
+.savedcard .sc-party{font-weight:700; font-size:.98rem; color:var(--ink);}
+.savedcard .sc-party .bn{font-weight:700;}
+.savedcard .sc-sub{font-size:.78rem; color:var(--muted); margin-top:3px;}
+.savedcard .sc-figs{display:flex; gap:18px; font-size:.82rem; font-variant-numeric:tabular-nums;}
+.savedcard .sc-figs b{display:block; font-size:.68rem; font-weight:500; color:var(--muted); text-transform:uppercase; letter-spacing:.04em;}
+.savedcard .sc-actions{display:flex; gap:6px;}
+.empty{text-align:center; color:var(--muted); font-size:.88rem; padding:30px 10px;}
+
+/* ================================================================
+   PRINT — replicates the official SVG ledger page (viewBox 0 0 612 1008)
+   ================================================================ */
+#printSheet{display:none;}
+
+@media print{
+  html{color-scheme:light;}
+  body{background:#fff; margin:0;}
+  body *{visibility:hidden;}
+  @page{size:A4; margin:10mm 9mm;}
+
+  #printSheet,#printSheet *{visibility:visible;}
+  #printSheet{
+    display:block; position:absolute; left:0; top:0; width:100%;
+    color:#000; font-family:'Noto Serif Bengali', serif;
+  }
+
+  /* ---- header: company block (mirrors SVG top) ---- */
+  #printSheet .ps-topgrid{position:relative; min-height:68px;}
+  #printSheet .ps-company{
+    text-align:center; font-weight:700; font-size:28px; line-height:1.15; padding-top:2px;
+  }
+  #printSheet .ps-addr{
+    text-align:center; font-size:10px; font-family:'Noto Serif Bengali', serif; margin-top:2px;
+  }
+  #printSheet .ps-contact{
+    position:absolute; top:0; right:0; font-size:7.5px; font-family:'Noto Serif Bengali', serif;
+    text-align:right; line-height:1.9;
+  }
+  #printSheet .ps-contact .row{display:flex; justify-content:flex-end; gap:4px;}
+  #printSheet .ps-contact .lbl{min-width:34px; text-align:left;}
+
+  /* ---- the "খতিয়ান / LEDGER / serial" mark, upper right, single line ---- */
+  #printSheet .ps-mark{position:absolute; top:28px; right:0; text-align:right; display:flex; flex-direction:column; align-items:flex-end; gap:1px; white-space:nowrap;}
+  #printSheet .ps-mark .serial{
+    font-family:Arial, sans-serif; font-size:10px; font-weight:700; color:#333;
+  }
+  #printSheet .ps-mark .bn{font-weight:700; font-size:18px;}
+  #printSheet .ps-mark .en{
+    font-family:Arial, 'ArialRoundedMTBold', sans-serif; font-weight:700;
+    font-size:11px; letter-spacing:.5px;
+  }
+
+  /* ---- meta fields: পার্টির নাম / ঠিকানা / মোবাইল + অর্থ বছর ---- */
+  #printSheet .ps-meta{margin-top:10px; font-size:10px;}
+  #printSheet .ps-meta-row{display:flex; align-items:baseline; border-bottom:1px dotted #000; padding:2px 0 1px; gap:4px;}
+  #printSheet .ps-meta-row .ps-lbl{white-space:nowrap; font-weight:700; font-size:10.5px;}
+  #printSheet .ps-meta-row .ps-colon{padding:0 2px;}
+  #printSheet .ps-meta-row .ps-val{flex:1; padding-left:2px; min-height:11px;}
+  #printSheet .ps-meta-split{display:flex;}
+  #printSheet .ps-meta-split .ps-left{flex:0 0 66%; display:flex; align-items:baseline; border-bottom:1px dotted #000; padding:2px 0 1px; gap:4px;}
+  #printSheet .ps-meta-split .ps-right{flex:1; display:flex; align-items:baseline; border-bottom:1px dotted #000; padding:2px 0 1px; gap:4px; margin-left:18px;}
+
+  /* ---- ACCOUNT OF bar ---- */
+  #printSheet .ps-acct{
+    margin-top:5px; font-weight:700; font-size:10.5px; font-family:Arial, sans-serif;
+    border-top:2px solid #000; border-bottom:2px solid #000; padding:3px 1px;
+  }
+
+  /* ---- entries table ---- */
+  #printSheet table{width:100%; border-collapse:collapse; margin-top:0; table-layout:fixed; border:2px solid #000;}
+  #printSheet thead{display:table-header-group;}
+  #printSheet tfoot{display:table-row-group;}
+  #printSheet tr{page-break-inside:avoid;}
+  #printSheet th,#printSheet td{border-right:2px double #000; padding:3px 3px; vertical-align:top;}
+  #printSheet th:last-child,#printSheet td:last-child{border-right:none;}
+  #printSheet thead th{background:#fff; border-bottom:2px solid #000; text-align:center; padding:4px 3px 5px;}
+  #printSheet thead th .bn{display:block; font-weight:700; font-size:13px; line-height:1.25;}
+  #printSheet thead th .en{display:block; font-weight:700; font-size:9.5px; font-family:Arial, sans-serif; line-height:1.3;}
+  #printSheet thead th.ps-folio-h .bn,
+  #printSheet thead th.ps-folio-h .en{font-size:9px;}
+  #printSheet tbody td{border-bottom:1px solid #000; height:20px; font-size:9.5px;}
+  #printSheet td.ps-num{text-align:right; font-family:Arial, sans-serif;}
+  #printSheet td.ps-folio{text-align:center; font-family:Arial, sans-serif;}
+  #printSheet tfoot td{background:#fff; border-top:2px solid #000; border-bottom:2px solid #000; font-weight:700; padding:4px 3px; font-family:Arial, sans-serif; font-size:9.5px;}
+  #printSheet tfoot td.ps-num{text-align:right;}
+
+  #printSheet col.c-date{width:12%;}
+  #printSheet col.c-part{width:32%;}
+  #printSheet col.c-folio{width:10%;}
+  #printSheet col.c-debit{width:14%;}
+  #printSheet col.c-credit{width:14%;}
+  #printSheet col.c-bal{width:18%;}
+}
+</style>
+</head>
+<body>
+<div class="bgfx no-print" aria-hidden="true"><i></i><i></i><i></i></div>
+
+<div class="topstrip no-print"><div class="wrap">
+  <span class="bn">খতিয়ান · লেজার প্যানেল</span>
+  <button type="button" class="langtoggle" id="langToggle">EN</button>
+</div></div>
+
+<!-- ================= LOGIN ================= -->
+<div class="lg" id="login">
+  <form class="lgc" id="lgf" autocomplete="on">
+    <h1 data-en="Admin Panel" data-bn="অ্যাডমিন প্যানেল">Admin Panel</h1>
+    <div class="biz bn">মেসার্স নবী এন্টারপ্রাইজ</div>
+    <div class="sub" data-en="Please sign in to open the books" data-bn="হিসাব দেখতে সাইন ইন করুন">Please sign in to open the books</div>
+
+    <label for="lu" data-en="Username" data-bn="ইউজারনেম">Username</label>
+    <input id="lu" autocomplete="username" autocapitalize="off" spellcheck="false">
+
+    <label for="lp" data-en="Password" data-bn="পাসওয়ার্ড">Password</label>
+    <div class="pw">
+      <input id="lp" type="password" autocomplete="current-password">
+      <button type="button" id="lshow" data-en="Show" data-bn="দেখান">Show</button>
+    </div>
+
+    <label class="ck"><input type="checkbox" id="lrem"><span data-en="Keep me signed in on this device (30 days)" data-bn="এই ডিভাইসে সাইন ইন রাখুন (৩০ দিন)">Keep me signed in on this device (30 days)</span></label>
+
+    <div class="lerr" id="lerr" role="alert"></div>
+    <button class="b" type="submit" data-en="Sign in" data-bn="সাইন ইন">Sign in</button>
+    <p class="lgn"></p>
+  </form>
+  <div class="creditwrap"><span class="credit"><span data-en="Designed &amp; Maintained by" data-bn="ডিজাইন ও রক্ষণাবেক্ষণ">Designed &amp; Maintained by</span> <a class="ob" href="https://optiqoweb.github.io/optiqoweb/" target="_blank" rel="noopener">Optiqo Web</a></span></div>
+</div>
+
+<!-- ================= APP ================= -->
+<div class="app" id="appRoot">
+  <div class="wrap-app">
+    <div class="topbar">
+      <div class="brandline">
+        <div class="en" data-en="Admin Panel" data-bn="অ্যাডমিন প্যানেল">Admin Panel</div>
+      </div>
+      <div class="btns no-print">
+        <button class="b sm" id="newBtn" data-en="+ New ledger" data-bn="+ নতুন খতিয়ান">+ New ledger</button>
+        <button class="b sm" id="saveBtn" data-en="Save" data-bn="সংরক্ষণ করুন">Save</button>
+        <span class="savemsg" id="saveMsg" aria-live="polite"></span>
+        <button class="b g sm" id="printBtn" data-en="Print / Save PDF" data-bn="প্রিন্ট / পিডিএফ সেভ">Print / Save PDF</button>
+        <button class="b r sm" id="logoutBtn" data-en="Sign out" data-bn="সাইন আউট">Sign out</button>
+      </div>
+    </div>
+
+    <div class="shell">
+      <nav class="sidenav no-print">
+        <button class="tab active" id="tabLedgerBtn"><span class="bn">খতিয়ান তৈরি</span>/NEW LEDGER</button>
+        <button class="tab" id="tabSavedBtn"><span class="bn">সংরক্ষিত খতিয়ান</span>/SAVED LEDGERS</button>
+      </nav>
+
+      <div class="content">
+        <div class="view active" id="viewLedger">
+          <section class="panel">
+            <h2 data-en="Account details" data-bn="হিসাবের বিবরণ">Account details</h2>
+            <div class="meta-grid">
+              <div class="field"><span class="lbl bn">পার্টির নাম</span><input id="f_party" placeholder="Name of the account holder" data-ph-en="Name of the account holder" data-ph-bn="হিসাবধারীর নাম"></div>
+              <div class="field"><span class="lbl bn">মোবাইল</span><input id="f_mobile" placeholder="Phone number" data-ph-en="Phone number" data-ph-bn="মোবাইল নম্বর"></div>
+              <div class="field"><span class="lbl bn">ঠিকানা</span><input id="f_address" placeholder="Address" data-ph-en="Address" data-ph-bn="ঠিকানা"></div>
+              <div class="field"><span class="lbl bn">অর্থ বছর</span><input id="f_year" placeholder="e.g. ২০২৬–২০২৭"></div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <h2><span class="bn">বিবরণ</span> — <span data-en="Account entries" data-bn="হিসাবের এন্ট্রি">Account entries</span></h2>
+            <div class="tablewrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width:120px"><span class="bn">তারিখ</span><span class="en">Date</span></th>
+                    <th><span class="bn">বিবরণ</span><span class="en">Particular</span></th>
+                    <th style="width:70px"><span class="bn">পৃষ্ঠা</span><span class="en">Folio</span></th>
+                    <th style="width:120px"><span class="bn">জমা</span><span class="en">Credit</span></th>
+                    <th style="width:120px"><span class="bn">খরচ</span><span class="en">Debit</span></th>
+                    <th style="width:130px"><span class="bn">অবশিষ্ট</span><span class="en">Balance</span></th>
+                    <th class="no-print" style="width:38px"></th>
+                  </tr>
+                </thead>
+                <tbody id="rows"></tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="3" style="text-align:right;" data-en="Totals" data-bn="মোট">Totals</td>
+                    <td class="num" id="totDebit">0.00</td>
+                    <td class="num" id="totCredit">0.00</td>
+                    <td class="num" id="runBal">0.00</td>
+                    <td class="no-print"></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            <div class="addrow no-print">
+              <button class="b g sm" id="addRow" data-en="+ Add entry" data-bn="+ এন্ট্রি যোগ করুন">+ Add entry</button>
+              <span class="note" data-en="Balance recalculates top to bottom as you type." data-bn="টাইপ করার সাথে সাথে অবশিষ্ট উপর থেকে নিচ পর্যন্ত নতুন করে হিসাব হবে।">Balance recalculates top to bottom as you type.</span>
+            </div>
+          </section>
+
+        </div>
+
+        <div class="view" id="viewSaved">
+          <section class="panel">
+            <h2><span class="bn">সংরক্ষিত খতিয়ান</span> — <span data-en="Saved ledgers" data-bn="সংরক্ষিত তালিকা">Saved ledgers</span></h2>
+            <div class="savedlist" id="savedList"></div>
+          </section>
+          <p class="note no-print"><span data-en="This is saved to the browser for now." data-bn="এটি আপাতত ব্রাউজারে সংরক্ষিত হচ্ছে।">This is saved to the browser for now.</span> <span id="dbNote" data-en="When a database is connected, this list will be loaded from and written to it instead." data-bn="ডেটাবেস সংযুক্ত হলে এই তালিকা সেখান থেকে লোড ও সংরক্ষণ হবে।">When a database is connected, this list will be loaded from and written to it instead.</span></p>
+        </div>
+      </div>
+    </div>
+    <div class="creditwrap footer no-print"><span class="credit">Designed &amp; Maintained by <a class="ob" href="https://optiqoweb.github.io/optiqoweb/" target="_blank" rel="noopener">Optiqo Web</a></span></div>
+  </div>
+</div>
+
+<!-- ================= PRINT SHEET (built fresh before each print) ================= -->
+<div id="printSheet" aria-hidden="true">
+  <div class="ps-topgrid">
+    <div class="ps-contact" id="ps_contact"></div>
+    <div class="ps-company" id="ps_company">মেসার্স নবী এন্টারপ্রাইজ</div>
+    <div class="ps-addr" id="ps_companyaddr">হাইস্পীড ঘাট, নওয়াপাড়া, যশোর</div>
+    <div class="ps-mark">
+      <span class="serial" id="ps_serial"></span>
+      <span class="bn">খতিয়ান</span>
+      <span class="en">LEDGER</span>
+    </div>
+  </div>
+
+  <div class="ps-meta">
+    <div class="ps-meta-row">
+      <span class="ps-lbl bn">পার্টির নাম</span><span class="ps-colon">:</span>
+      <span class="ps-val" id="ps_party"></span>
+    </div>
+    <div class="ps-meta-row">
+      <span class="ps-lbl bn">ঠিকানা</span><span class="ps-colon">:</span>
+      <span class="ps-val" id="ps_address"></span>
+    </div>
+    <div class="ps-meta-split">
+      <div class="ps-left">
+        <span class="ps-lbl bn">মোবাইল</span><span class="ps-colon">:</span>
+        <span class="ps-val" id="ps_mobile"></span>
+      </div>
+      <div class="ps-right">
+        <span class="ps-lbl bn">অর্থ বছর</span><span class="ps-colon">:</span>
+        <span class="ps-val" id="ps_year"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="ps-acct">ACCOUNT OF</div>
+
+  <table>
+    <colgroup>
+      <col class="c-date"><col class="c-part"><col class="c-folio">
+      <col class="c-debit"><col class="c-credit"><col class="c-bal">
+    </colgroup>
+    <thead>
+      <tr>
+        <th><span class="bn">তারিখ</span><span class="en">Date</span></th>
+        <th><span class="bn">বিবরণ</span><span class="en">Particular</span></th>
+        <th class="ps-folio-h"><span class="bn">ফোলিও</span><span class="en">Folio</span></th>
+        <th><span class="bn">জমা</span><span class="en">Credit</span></th>
+        <th><span class="bn">খরচ</span><span class="en">Debit</span></th>
+        <th><span class="bn">অবশিষ্ট</span><span class="en">Balance</span></th>
+      </tr>
+    </thead>
+    <tbody id="ps_rows"></tbody>
+    <tfoot>
+      <tr>
+        <td colspan="3" style="text-align:right;" data-en="Totals" data-bn="মোট">Totals</td>
+        <td class="ps-num" id="ps_totDebit">0.00</td>
+        <td class="ps-num" id="ps_totCredit">0.00</td>
+        <td class="ps-num" id="ps_runBal">0.00</td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+
+<script>
+(function(){
+"use strict";
+var $=function(i){return document.getElementById(i);};
+var ok=function(fn,fb){try{return fn();}catch(e){return fb;}};
+
+/* ---------- i18n (EN / বাং toggle) ---------- */
+var I18N = {
+  en: {
+    saving:"Saving…", saved:"Saved ✓", openBtn:"Open", delBtn:"Delete",
+    emptyList:'No saved ledgers yet. Open a ledger and press <b>Save</b> to add one here.',
+    serialLbl:"Serial", savedLbl:"saved", debitLbl:"Debit", creditLbl:"Credit", balanceLbl:"Balance",
+    confirmNew:"Start a new ledger? Unsaved changes to the current one will be lost unless you Save first.",
+    confirmDel:"Delete this saved ledger? This can't be undone.",
+    tooManyAttempts:function(s){return "Too many attempts. Try again in "+s+"s.";},
+    enterCreds:"Enter your username and password.", checking:"Checking…",
+    lockedOut:"Too many attempts. Locked for 60 seconds.", wrongCreds:"Wrong username or password.",
+    removeRow:"Remove row", descPh:"Description", show:"Show", hide:"Hide", noPartyName:"(no party name)"
+  },
+  bn: {
+    saving:"সংরক্ষণ হচ্ছে…", saved:"সংরক্ষিত হয়েছে ✓", openBtn:"খুলুন", delBtn:"মুছুন",
+    emptyList:'এখনো কোনো খতিয়ান সংরক্ষিত নেই। একটি খতিয়ান খুলে <b>Save</b> চাপুন।',
+    serialLbl:"সিরিয়াল", savedLbl:"সংরক্ষণের সময়", debitLbl:"খরচ", creditLbl:"জমা", balanceLbl:"অবশিষ্ট",
+    confirmNew:"নতুন খতিয়ান শুরু করবেন? আগে Save না করলে বর্তমান পরিবর্তনগুলো হারিয়ে যাবে।",
+    confirmDel:"এই সংরক্ষিত খতিয়ানটি মুছে ফেলবেন? এটি আর ফিরিয়ে আনা যাবে না।",
+    tooManyAttempts:function(s){return "অনেকবার চেষ্টা হয়েছে। "+s+" সেকেন্ড পর আবার চেষ্টা করুন।";},
+    enterCreds:"ইউজারনেম এবং পাসওয়ার্ড লিখুন।", checking:"যাচাই হচ্ছে…",
+    lockedOut:"অনেকবার ভুল চেষ্টা হয়েছে। ৬০ সেকেন্ডের জন্য লক করা হয়েছে।", wrongCreds:"ইউজারনেম বা পাসওয়ার্ড ভুল।",
+    removeRow:"সারি মুছুন", descPh:"বিবরণ", show:"দেখান", hide:"লুকান", noPartyName:"(পার্টির নাম নেই)"
+  }
+};
+var LANG = ok(function(){return localStorage.getItem("ledgerapp:lang");},null) || "bn";
+function T(key){ return I18N[LANG][key]; }
+function applyStaticLang(){
+  document.documentElement.setAttribute("data-lang", LANG);
+  Array.prototype.forEach.call(document.querySelectorAll("[data-en]"), function(el){
+    el.textContent = el.getAttribute("data-"+LANG);
+  });
+  Array.prototype.forEach.call(document.querySelectorAll("[data-ph-en]"), function(el){
+    el.placeholder = el.getAttribute("data-ph-"+LANG);
+  });
+  var langBtn = $("langToggle");
+  if(langBtn) langBtn.textContent = LANG==="en" ? "বাং" : "EN";
+  var lshowBtn = $("lshow");
+  if(lshowBtn) lshowBtn.textContent = (lp && lp.type==="password") ? T("show") : T("hide");
+}
+function setLang(lang){
+  LANG = lang;
+  ok(function(){localStorage.setItem("ledgerapp:lang", lang);});
+  applyStaticLang();
+  if(typeof renderSavedList === "function" && viewSaved && viewSaved.classList.contains("active")) renderSavedList();
+}
+
+/* ---------- SHA-256 (WebCrypto) ---------- */
+function sha256(text){
+  return crypto.subtle.digest("SHA-256", new TextEncoder().encode(text)).then(function(buf){
+    return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,"0");}).join("");
+  });
+}
+function saltFor(u){ return "lg_"+u.toLowerCase()+"_v1"; }
+
+/* ---------- preset account ---------- */
+var usersKey="ledgerapp:users", sessionKey="ledgerapp:session";
+var PRESET_U="milon", PRESET_P="NME26";
+function loadUsers(){ return ok(function(){return JSON.parse(localStorage.getItem(usersKey)||"{}");},{}); }
+function saveUsers(u){ ok(function(){localStorage.setItem(usersKey,JSON.stringify(u));}); }
+function ensurePreset(){
+  var users=loadUsers();
+  if(!users[PRESET_U]){
+    return sha256(saltFor(PRESET_U)+":"+PRESET_P).then(function(h){
+      users[PRESET_U]={username:PRESET_U,hash:h}; saveUsers(users);
+    });
+  }
+  return Promise.resolve();
+}
+
+/* ---------- lockout state (per session) ---------- */
+function fails(){ return +sessionStorage.getItem("lg_fail")||0; }
+function lockUntil(){ return +sessionStorage.getItem("lg_lock")||0; }
+
+var lu=$("lu"), lp=$("lp"), lerr=$("lerr"), lgf=$("lgf"), lrem=$("lrem");
+$("lshow").addEventListener("click",function(){
+  var isPw=lp.type==="password"; lp.type=isPw?"text":"password"; this.textContent=isPw?T("hide"):T("show");
+});
+$("langToggle").addEventListener("click", function(){ setLang(LANG==="en" ? "bn" : "en"); });
+
+lgf.addEventListener("submit", function(e){
+  e.preventDefault();
+  var now=Date.now(), lock=lockUntil();
+  if(now<lock){ lerr.textContent=T("tooManyAttempts")(Math.ceil((lock-now)/1000)); return; }
+  var username=lu.value.trim(), pass=lp.value;
+  if(!username||!pass){ lerr.textContent=T("enterCreds"); return; }
+  lerr.textContent=T("checking");
+  ensurePreset().then(function(){
+    var users=loadUsers(), rec=users[username.toLowerCase()];
+    if(!rec){ return Promise.resolve(false); }
+    return sha256(saltFor(username)+":"+pass).then(function(h){ return h===rec.hash ? rec.username : false; });
+  }).then(function(result){
+    if(result){
+      sessionStorage.removeItem("lg_fail");
+      if(lrem.checked){ localStorage.setItem(sessionKey, result); }
+      else { sessionStorage.setItem(sessionKey, result); }
+      lerr.textContent=""; enterApp(result);
+    } else {
+      var f=fails()+1;
+      if(f>=5){ sessionStorage.setItem("lg_lock", String(Date.now()+60000)); sessionStorage.setItem("lg_fail","0"); lerr.textContent=T("lockedOut"); }
+      else { sessionStorage.setItem("lg_fail", String(f)); lerr.textContent=T("wrongCreds"); }
+      lp.value=""; lp.focus();
+    }
+  });
+});
+
+$("logoutBtn").addEventListener("click", function(){
+  sessionStorage.removeItem(sessionKey); localStorage.removeItem(sessionKey);
+  document.body.classList.remove("in");
+  lgf.reset(); lerr.textContent="";
+});
+$("printBtn").addEventListener("click", function(){ buildPrintSheet(); window.print(); });
+
+/* ---------- Save ----------
+   For now this saves to the browser (localStorage), same place autosave already
+   writes to. When a backend is wired up, replace the body of this handler with
+   a fetch() call to the database endpoint, e.g.:
+     await fetch("/api/ledgers/" + currentUser, { method:"PUT", body: JSON.stringify(currentState()) });
+   and surface its success/error state in #saveMsg instead of the local-save message. */
+window.addEventListener("beforeprint", buildPrintSheet);
+
+/* ---------- tabs ---------- */
+var tabLedgerBtn=$("tabLedgerBtn"), tabSavedBtn=$("tabSavedBtn");
+var viewLedger=$("viewLedger"), viewSaved=$("viewSaved");
+function showTab(which){
+  var isLedger = which==="ledger";
+  tabLedgerBtn.classList.toggle("active", isLedger);
+  tabSavedBtn.classList.toggle("active", !isLedger);
+  viewLedger.classList.toggle("active", isLedger);
+  viewSaved.classList.toggle("active", !isLedger);
+  if(!isLedger) renderSavedList();
+}
+tabLedgerBtn.addEventListener("click", function(){ showTab("ledger"); });
+tabSavedBtn.addEventListener("click", function(){ showTab("saved"); });
+
+/* ---------- ledger ---------- */
+var currentUser=null;
+var currentSerial=null;
+var rowsEl=$("rows");
+var fields=["f_party","f_mobile","f_address","f_year"].map(function(id){return $(id);});
+
+/* ---------- storage: current working draft + a list of saved snapshots ----------
+   For now both live in localStorage. When a backend/database exists, swap the
+   bodies of loadLedger/saveLedger (the draft) and loadSavedList/saveSavedList
+   (the saved-ledgers list) for fetch() calls against the real API, e.g.:
+     GET/PUT  /api/ledgers/:user/draft
+     GET/PUT  /api/ledgers/:user/saved      (array of snapshots)
+   Keep the same shapes ({meta, rows} for a draft; array of snapshot objects
+   for the list) and the rest of the UI needs no changes. */
+function ledgerKey(u){ return "ledgerapp:data:"+u; }
+function loadLedger(u){ return ok(function(){return JSON.parse(localStorage.getItem(ledgerKey(u))||"null");},null); }
+function saveLedger(u,data){ ok(function(){localStorage.setItem(ledgerKey(u),JSON.stringify(data));}); }
+
+function savedListKey(u){ return "ledgerapp:saved:"+u; }
+function loadSavedList(u){ return ok(function(){return JSON.parse(localStorage.getItem(savedListKey(u))||"[]");},[]); }
+function saveSavedList(u,list){ ok(function(){localStorage.setItem(savedListKey(u),JSON.stringify(list));}); }
+
+function blankRow(){ return {date:"",particular:"",folio:"",debit:"",credit:""}; }
+function randomSerial(){
+  var d = new Date();
+  var yy = String(d.getFullYear()).slice(-2);
+  var mm = String(d.getMonth()+1).padStart(2,"0");
+  var n = Math.floor(Math.random()*9000)+1000;
+  return yy+"-"+mm+"-"+n;
+}
+function num(v){ var n=parseFloat(v); return isNaN(n)?0:n; }
+function escapeAttr(s){ return String(s||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;"); }
+function escapeHtml(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function fmtDate(v){
+  if(!v) return "";
+  var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v);
+  return m ? (m[3]+"/"+m[2]+"/"+m[1]) : v;
+}
+
+function persist(){ if(currentUser) saveLedger(currentUser, currentState()); }
+function currentState(){
+  var meta={}; fields.forEach(function(el){ meta[el.id]=el.value; });
+  meta.serial = currentSerial;
+  var rows=Array.prototype.map.call(rowsEl.querySelectorAll("tr"), function(tr){
+    return {
+      date: tr.querySelector(".c-date").value,
+      particular: tr.querySelector(".c-part").value,
+      folio: tr.querySelector(".c-folio").value,
+      debit: tr.querySelector(".c-debit").value,
+      credit: tr.querySelector(".c-credit").value
+    };
+  });
+  return {meta:meta, rows:rows};
+}
+function recalc(){
+  var bal=0, td=0, tc=0;
+  Array.prototype.forEach.call(rowsEl.querySelectorAll("tr"), function(tr){
+    var d=num(tr.querySelector(".c-debit").value), c=num(tr.querySelector(".c-credit").value);
+    td+=d; tc+=c; bal+=d-c;
+    tr.querySelector(".c-bal").textContent=bal.toFixed(2);
+  });
+  $("totDebit").textContent=td.toFixed(2);
+  $("totCredit").textContent=tc.toFixed(2);
+  $("runBal").textContent=bal.toFixed(2);
+}
+function addRowEl(data){
+  data=data||blankRow();
+  var tr=document.createElement("tr");
+  tr.innerHTML =
+    '<td><input type="date" class="c-date" value="'+escapeAttr(data.date)+'"></td>'+
+    '<td><input type="text" class="c-part" placeholder="'+T("descPh")+'" value="'+escapeAttr(data.particular)+'"></td>'+
+    '<td><input type="text" class="c-folio" value="'+escapeAttr(data.folio)+'"></td>'+
+    '<td class="num"><input type="text" inputmode="decimal" class="c-debit" value="'+escapeAttr(data.debit)+'"></td>'+
+    '<td class="num"><input type="text" inputmode="decimal" class="c-credit" value="'+escapeAttr(data.credit)+'"></td>'+
+    '<td class="num"><span class="c-bal">0.00</span></td>'+
+    '<td class="del no-print"><button type="button" title="'+T("removeRow")+'">✕</button></td>';
+  Array.prototype.forEach.call(tr.querySelectorAll("input"), function(inp){
+    inp.addEventListener("input", function(){ recalc(); persist(); });
+  });
+  tr.querySelector(".del button").addEventListener("click", function(){ tr.remove(); recalc(); persist(); });
+  rowsEl.appendChild(tr);
+}
+$("addRow").addEventListener("click", function(){ addRowEl(); recalc(); persist(); });
+fields.forEach(function(el){ el.addEventListener("input", persist); });
+
+/* ---------- build the official-format print sheet from live data ---------- */
+function buildPrintSheet(){
+  $("ps_party").textContent = $("f_party").value || "";
+  $("ps_address").textContent = $("f_address").value || "";
+  $("ps_mobile").textContent = $("f_mobile").value || "";
+  $("ps_year").textContent = $("f_year").value || "";
+  $("ps_serial").textContent = currentSerial || "";
+
+  var tbody = $("ps_rows");
+  tbody.innerHTML = "";
+  var bal=0, td=0, tc=0;
+  Array.prototype.forEach.call(rowsEl.querySelectorAll("tr"), function(tr){
+    var date = tr.querySelector(".c-date").value;
+    var part = tr.querySelector(".c-part").value;
+    var folio = tr.querySelector(".c-folio").value;
+    var d = num(tr.querySelector(".c-debit").value);
+    var c = num(tr.querySelector(".c-credit").value);
+    td += d; tc += c; bal += d - c;
+
+    var row = document.createElement("tr");
+    row.innerHTML =
+      "<td>"+escapeHtml(fmtDate(date))+"</td>"+
+      "<td>"+escapeHtml(part)+"</td>"+
+      "<td class=\"ps-folio\">"+escapeHtml(folio)+"</td>"+
+      "<td class=\"ps-num\">"+(d?d.toFixed(2):"")+"</td>"+
+      "<td class=\"ps-num\">"+(c?c.toFixed(2):"")+"</td>"+
+      "<td class=\"ps-num\">"+bal.toFixed(2)+"</td>";
+    tbody.appendChild(row);
+  });
+
+  $("ps_totDebit").textContent = td.toFixed(2);
+  $("ps_totCredit").textContent = tc.toFixed(2);
+  $("ps_runBal").textContent = bal.toFixed(2);
+}
+
+/* ---------- Save / New / Saved-ledgers list ---------- */
+var saveMsgEl = $("saveMsg");
+var saveMsgTimer = null;
+
+function totalsOf(state){
+  var bal=0, td=0, tc=0;
+  (state.rows||[]).forEach(function(r){
+    var d=num(r.debit), c=num(r.credit);
+    td+=d; tc+=c; bal+=d-c;
+  });
+  return {debit:td, credit:tc, balance:bal};
+}
+
+$("saveBtn").addEventListener("click", function(){
+  clearTimeout(saveMsgTimer);
+  saveMsgEl.textContent = T("saving");
+  saveMsgEl.className = "savemsg pending";
+  persist(); // keep the working draft current
+
+  var state = currentState();
+  var list = loadSavedList(currentUser);
+  var idx = list.findIndex(function(s){ return s.id === currentSerial; });
+  var snapshot = {
+    id: currentSerial,
+    serial: currentSerial,
+    party: $("f_party").value || "",
+    mobile: $("f_mobile").value || "",
+    address: $("f_address").value || "",
+    year: $("f_year").value || "",
+    rows: state.rows,
+    totals: totalsOf(state),
+    savedAt: new Date().toISOString()
+  };
+  if(idx === -1) list.unshift(snapshot); else list[idx] = snapshot;
+  saveSavedList(currentUser, list);
+
+  setTimeout(function(){
+    saveMsgEl.textContent = T("saved");
+    saveMsgEl.className = "savemsg";
+    saveMsgTimer = setTimeout(function(){ saveMsgEl.textContent = ""; }, 2500);
+  }, 250);
+});
+
+$("newBtn").addEventListener("click", function(){
+  if(!confirm(T("confirmNew"))) return;
+  fields.forEach(function(el){ el.value=""; });
+  rowsEl.innerHTML="";
+  currentSerial = randomSerial();
+  addRowEl();
+  recalc();
+  persist();
+  showTab("ledger");
+});
+
+function fmtSavedAt(iso){
+  var d = new Date(iso);
+  if(isNaN(d)) return "";
+  return d.toLocaleDateString(undefined,{day:"2-digit",month:"short",year:"numeric"}) + " · " +
+         d.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"});
+}
+
+function renderSavedList(){
+  var list = loadSavedList(currentUser);
+  var wrap = $("savedList");
+  wrap.innerHTML = "";
+  if(!list.length){
+    wrap.innerHTML = '<div class="empty">'+T("emptyList")+'</div>';
+    return;
+  }
+  list.forEach(function(s){
+    var card = document.createElement("div");
+    card.className = "savedcard";
+    card.innerHTML =
+      '<div class="sc-main">'+
+        '<div class="sc-party bn">'+escapeHtml(s.party || T("noPartyName"))+'</div>'+
+        '<div class="sc-sub">'+T("serialLbl")+' '+escapeHtml(s.serial||"")+' · '+T("savedLbl")+' '+escapeHtml(fmtSavedAt(s.savedAt))+'</div>'+
+      '</div>'+
+      '<div class="sc-figs">'+
+        '<div><b>'+T("debitLbl")+'</b>'+(s.totals?s.totals.debit.toFixed(2):"0.00")+'</div>'+
+        '<div><b>'+T("creditLbl")+'</b>'+(s.totals?s.totals.credit.toFixed(2):"0.00")+'</div>'+
+        '<div><b>'+T("balanceLbl")+'</b>'+(s.totals?s.totals.balance.toFixed(2):"0.00")+'</div>'+
+      '</div>'+
+      '<div class="sc-actions">'+
+        '<button class="b g sm" data-act="open">'+T("openBtn")+'</button>'+
+        '<button class="b r sm" data-act="del">'+T("delBtn")+'</button>'+
+      '</div>';
+    card.querySelector('[data-act="open"]').addEventListener("click", function(){ openSaved(s.id); });
+    card.querySelector('[data-act="del"]').addEventListener("click", function(){ deleteSaved(s.id); });
+    wrap.appendChild(card);
+  });
+}
+
+function openSaved(id){
+  var list = loadSavedList(currentUser);
+  var s = list.find(function(x){ return x.id === id; });
+  if(!s) return;
+  fields.forEach(function(el){ el.value = ""; });
+  $("f_party").value = s.party || "";
+  $("f_mobile").value = s.mobile || "";
+  $("f_address").value = s.address || "";
+  $("f_year").value = s.year || "";
+  currentSerial = s.serial;
+  rowsEl.innerHTML = "";
+  (s.rows && s.rows.length ? s.rows : [blankRow()]).forEach(addRowEl);
+  recalc();
+  persist();
+  showTab("ledger");
+}
+
+function deleteSaved(id){
+  if(!confirm(T("confirmDel"))) return;
+  var list = loadSavedList(currentUser).filter(function(x){ return x.id !== id; });
+  saveSavedList(currentUser, list);
+  renderSavedList();
+}
+
+function enterApp(username){
+  currentUser=username.toLowerCase();
+  document.body.classList.add("in");
+  rowsEl.innerHTML="";
+  var saved=loadLedger(currentUser);
+  if(saved){
+    fields.forEach(function(el){ el.value = saved.meta && saved.meta[el.id] ? saved.meta[el.id] : ""; });
+    currentSerial = (saved.meta && saved.meta.serial) ? saved.meta.serial : randomSerial();
+    (saved.rows && saved.rows.length ? saved.rows : []).forEach(addRowEl);
+  } else {
+    fields.forEach(function(el){ el.value=""; });
+    currentSerial = randomSerial();
+    addRowEl();
+  }
+  recalc();
+  persist();
+}
+
+/* ---------- resume session ---------- */
+applyStaticLang();
+ensurePreset().then(function(){
+  var saved = sessionStorage.getItem(sessionKey) || localStorage.getItem(sessionKey);
+  if(saved){
+    var users=loadUsers(), rec=users[saved.toLowerCase()];
+    if(rec){ enterApp(rec.username); return; }
+  }
+  lu.focus();
+});
+})();
+</script>
+</body>
+</html>
