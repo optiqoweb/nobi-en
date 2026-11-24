@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://editoranikadhikary.github.io/MsNobiEnterprise/sitemap.xml
